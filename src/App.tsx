@@ -45,8 +45,8 @@ export function App() {
     localStorage.setItem("notes", JSON.stringify(notesArray));
   }
 
-  function handleSearch(event: ChangeEvent<HTMLInputElement>) {
-    const query = event.target.value;
+  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
+    const query = e.target.value;
 
     setSearch(query);
   }

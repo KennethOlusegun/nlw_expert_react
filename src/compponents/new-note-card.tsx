@@ -20,14 +20,14 @@ export function NewNoteCard({ onNoteCreated }: NewNoteProps) {
   function handleStartEditor() {
     setShouldShowOnboarding(false);
   }
-  function handleContentChanged(event: ChangeEvent<HTMLTextAreaElement>) {
-    setContent(event.target.value);
-    if (event.target.value === "") {
+  function handleContentChanged(e: ChangeEvent<HTMLTextAreaElement>) {
+    setContent(e.target.value);
+    if (e.target.value === "") {
       setShouldShowOnboarding(true);
     }
   }
-  function handleSaveNote(event: FormEvent) {
-    event.preventDefault();
+  function handleSaveNote(e: FormEvent) {
+    e.preventDefault();
 
     if (content === "") {
       return;
@@ -58,16 +58,16 @@ export function NewNoteCard({ onNoteCreated }: NewNoteProps) {
     speechRecognition.maxAlternatives = 1;
     speechRecognition.interimResults = true;
 
-    speechRecognition.onresult = (event) => {
-      const transcription = Array.from(event.results).reduce((text, result) => {
+    speechRecognition.onresult = (e) => {
+      const transcription = Array.from(e.results).reduce((text, result) => {
         return text.concat(result[0].transcript);
       }, "");
 
       setContent(transcription);
     };
 
-    speechRecognition.onerror = (event) => {
-      console.error(event);
+    speechRecognition.onerror = (e) => {
+      console.error(e);
     };
 
     speechRecognition.start();
