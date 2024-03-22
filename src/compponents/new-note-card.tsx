@@ -50,7 +50,7 @@ export function NewNoteCard({ onNoteCreated }: NewNoteProps) {
       return;
     }
 
-    speechRecognition.onresult = handleSpeechRecognitionResult;
+    
 
     setIsRecording(true);
     setShouldShowOnboarding(false);
