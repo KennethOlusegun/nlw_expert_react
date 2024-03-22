@@ -75,19 +75,6 @@ export function NewNoteCard({ onNoteCreated }: NewNoteProps) {
     speechRecognition.start();
   }
 
-  function handleSpeechRecognitionResult(e: SpeechRecognitionEvent) {
-    if (e.results.length > 0) {
-      const lastResult = e.results[e.results.length - 1];
-      if (lastResult.isFinal) {
-        const transcription = Array.from(e.results).reduce(
-          (text, result) => text.concat(result[0].transcript),
-          ""
-        );
-        setContent(transcription);
-      }
-    }
-  }
-
   function handleStopRecording() {
     setIsRecording(false);
 
