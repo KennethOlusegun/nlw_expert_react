@@ -16,20 +16,30 @@ export function NewNoteCard({ onNoteCreated }: NewNoteProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true);
   const [content, setContent] = useState("");
+  const [transcription, setTranscription] = useState(""); // Adicionamos a variável de transcrição
 
   function handleStartEditor() {
     setShouldShowOnboarding(false);
   }
-  function handleContentChanged(e: ChangeEvent<HTMLTextAreaElement>) {
-    setContent(e.target.value);
-    if (e.target.value === "") {
+
+  function handleContentChanged(event: ChangeEvent<HTMLTextAreaElement>) {
+    setContent(event.target.value);
+
+    if (event.target.value === "") {
       setShouldShowOnboarding(true);
     }
   }
-  function handleSaveNote(e: FormEvent) {
-    e.preventDefault();
+
+  function handleSaveNote(event: FormEvent) {
+    event.preventDefault();
 
     if (content === "") {
+      return;
+    }
+
+    // Verifica se a transcrição já existe na nota
+    if (content.includes(transcription)) {
+      toast.warning("Essa transcrição já existe na nota!");
       return;
     }
 
@@ -50,8 +60,6 @@ export function NewNoteCard({ onNoteCreated }: NewNoteProps) {
       return;
     }
 
-    
-
     setIsRecording(true);
     setShouldShowOnboarding(false);
 
@@ -60,16 +68,13 @@ export function NewNoteCard({ onNoteCreated }: NewNoteProps) {
     speechRecognition.maxAlternatives = 1;
     speechRecognition.interimResults = true;
 
-    speechRecognition.onresult = (e) => {
-      const transcription = Array.from(e.results).reduce((text, result) => {
+    speechRecognition.onresult = (event) => {
+      const transcription = Array.from(event.results).reduce((text, result) => {
         return text.concat(result[0].transcript);
       }, "");
 
+      setTranscription(transcription); // Atualizamos a variável de transcrição
       setContent(transcription);
-    };
-
-    speechRecognition.onerror = (e) => {
-      console.error(e);
     };
 
     speechRecognition.start();
@@ -89,6 +94,7 @@ export function NewNoteCard({ onNoteCreated }: NewNoteProps) {
         <span className="text-sm font-medium text-slate-200">
           Adicionar nota
         </span>
+
         <p className="text-sm leading-6 text-slate-400">
           Grave uma nota em áudio que será convertida para texto
           automaticamente.
@@ -107,6 +113,7 @@ export function NewNoteCard({ onNoteCreated }: NewNoteProps) {
               <span className="text-sm font-medium text-slate-300">
                 Adicionar nota
               </span>
+
               {shouldShowOnboarding ? (
                 <p className="text-sm leading-6 text-slate-400">
                   Comece{" "}
